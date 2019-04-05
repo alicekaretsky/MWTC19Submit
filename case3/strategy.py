@@ -1,9 +1,8 @@
 import numpy as np
 import pickle
 
-
 def load_object(file_name):
-    """load the pickled object"""
+    "load the pickled object"
     with open(file_name, 'rb') as f:
         return pickle.load(f)
 
@@ -24,13 +23,24 @@ class Strategy():
         pass
 
     def handle_update(self, inx, price, factors):
-        """Put your logic here
-        Args:
-            inx: zero-based inx in days
-            price: [num_assets, ]
-            factors: [num_assets, num_factors]
-        Return:
-            allocation: [num_assets, ]
-        """
+        tobuy = np.zeros(680)
+        for x in range(680):
+            if (factors[x][4]>80):
+                tobuy[x] += 1.3
+            if (factors[x][4]>70):
+                tobuy[x] += 1.2
+            if (factors[x][4]>60):
+                tobuy[x] += 1.1
+            if (factors[x][4]>50):
+                tobuy[x] += 0.7
+            if (factors[x][4]<50):
+                tobuy[x] -= 0.7
+            if (factors[x][4]<40):
+                tobuy[x] -= 1.1
+            if (factors[x][4]<30):
+                tobuy[x] -= 1.2
+            if (factors[x][4]<20):
+                tobuy[x] -= 1.3
+
         assert price.shape[0] == factors.shape[0]
-        return np.array([1.0] * price.shape[0])
+        return tobuy.astype(float)
